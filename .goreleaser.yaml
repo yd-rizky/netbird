@@ -224,8 +224,7 @@ nfpms:
         key_file: '{{ if index .Env "GPG_RPM_KEY_FILE" }}{{ .Env.GPG_RPM_KEY_FILE }}{{ end }}'
 dockers:
   - image_templates:
-      - netbirdio/netbird:{{ .Version }}-amd64
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-amd64
+      - rydiann/netbird:{{ .Version }}-amd64
     ids:
       - netbird
     goarch: amd64
@@ -242,8 +241,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/netbird:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-arm64v8
+      - rydiann/netbird:{{ .Version }}-arm64v8
     ids:
       - netbird
     goarch: arm64
@@ -260,8 +258,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/netbird:{{ .Version }}-arm
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-arm
+      - rydiann/netbird:{{ .Version }}-arm
     ids:
       - netbird
     goarch: arm
@@ -280,8 +277,7 @@ dockers:
       - "--label=maintainer=dev@netbird.io"
 
   - image_templates:
-      - netbirdio/netbird:{{ .Version }}-rootless-amd64
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-rootless-amd64
+      - rydiann/netbird:{{ .Version }}-rootless-amd64
     ids:
       - netbird
     goarch: amd64
@@ -298,8 +294,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/netbird:{{ .Version }}-rootless-arm64v8
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-rootless-arm64v8
+      - rydiann/netbird:{{ .Version }}-rootless-arm64v8
     ids:
       - netbird
     goarch: arm64
@@ -316,8 +311,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/netbird:{{ .Version }}-rootless-arm
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-rootless-arm
+      - rydiann/netbird:{{ .Version }}-rootless-arm
     ids:
       - netbird
     goarch: arm
@@ -336,8 +330,7 @@ dockers:
       - "--label=maintainer=dev@netbird.io"
 
   - image_templates:
-      - netbirdio/relay:{{ .Version }}-amd64
-      - ghcr.io/netbirdio/relay:{{ .Version }}-amd64
+      - rydiann/relay:{{ .Version }}-amd64
     ids:
       - netbird-relay
     goarch: amd64
@@ -352,8 +345,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/relay:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/relay:{{ .Version }}-arm64v8
+      - rydiann/relay:{{ .Version }}-arm64v8
     ids:
       - netbird-relay
     goarch: arm64
@@ -368,8 +360,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/relay:{{ .Version }}-arm
-      - ghcr.io/netbirdio/relay:{{ .Version }}-arm
+      - rydiann/relay:{{ .Version }}-arm
     ids:
       - netbird-relay
     goarch: arm
@@ -385,8 +376,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/signal:{{ .Version }}-amd64
-      - ghcr.io/netbirdio/signal:{{ .Version }}-amd64
+      - rydiann/signal:{{ .Version }}-amd64
     ids:
       - netbird-signal
     goarch: amd64
@@ -401,8 +391,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/signal:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/signal:{{ .Version }}-arm64v8
+      - rydiann/signal:{{ .Version }}-arm64v8
     ids:
       - netbird-signal
     goarch: arm64
@@ -417,8 +406,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/signal:{{ .Version }}-arm
-      - ghcr.io/netbirdio/signal:{{ .Version }}-arm
+      - rydiann/signal:{{ .Version }}-arm
     ids:
       - netbird-signal
     goarch: arm
@@ -434,8 +422,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/management:{{ .Version }}-amd64
-      - ghcr.io/netbirdio/management:{{ .Version }}-amd64
+      - rydiann/management:{{ .Version }}-amd64
     ids:
       - netbird-mgmt
     goarch: amd64
@@ -450,8 +437,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/management:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/management:{{ .Version }}-arm64v8
+      - rydiann/management:{{ .Version }}-arm64v8
     ids:
       - netbird-mgmt
     goarch: arm64
@@ -466,8 +452,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/management:{{ .Version }}-arm
-      - ghcr.io/netbirdio/management:{{ .Version }}-arm
+      - rydiann/management:{{ .Version }}-arm
     ids:
       - netbird-mgmt
     goarch: arm
@@ -483,8 +468,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/management:{{ .Version }}-debug-amd64
-      - ghcr.io/netbirdio/management:{{ .Version }}-debug-amd64
+      - rydiann/management:{{ .Version }}-debug-amd64
     ids:
       - netbird-mgmt
     goarch: amd64
@@ -499,8 +483,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/management:{{ .Version }}-debug-arm64v8
-      - ghcr.io/netbirdio/management:{{ .Version }}-debug-arm64v8
+      - rydiann/management:{{ .Version }}-debug-arm64v8
     ids:
       - netbird-mgmt
     goarch: arm64
@@ -516,8 +499,7 @@ dockers:
       - "--label=maintainer=dev@netbird.io"
 
   - image_templates:
-      - netbirdio/management:{{ .Version }}-debug-arm
-      - ghcr.io/netbirdio/management:{{ .Version }}-debug-arm
+      - rydiann/management:{{ .Version }}-debug-arm
     ids:
       - netbird-mgmt
     goarch: arm
@@ -533,8 +515,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/upload:{{ .Version }}-amd64
-      - ghcr.io/netbirdio/upload:{{ .Version }}-amd64
+      - rydiann/upload:{{ .Version }}-amd64
     ids:
       - netbird-upload
     goarch: amd64
@@ -549,8 +530,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/upload:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/upload:{{ .Version }}-arm64v8
+      - rydiann/upload:{{ .Version }}-arm64v8
     ids:
       - netbird-upload
     goarch: arm64
@@ -565,8 +545,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/upload:{{ .Version }}-arm
-      - ghcr.io/netbirdio/upload:{{ .Version }}-arm
+      - rydiann/upload:{{ .Version }}-arm
     ids:
       - netbird-upload
     goarch: arm
@@ -582,8 +561,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/netbird-server:{{ .Version }}-amd64
-      - ghcr.io/netbirdio/netbird-server:{{ .Version }}-amd64
+      - rydiann/netbird-server:{{ .Version }}-amd64
     ids:
       - netbird-server
     goarch: amd64
@@ -598,8 +576,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/netbird-server:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/netbird-server:{{ .Version }}-arm64v8
+      - rydiann/netbird-server:{{ .Version }}-arm64v8
     ids:
       - netbird-server
     goarch: arm64
@@ -614,8 +591,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/netbird-server:{{ .Version }}-arm
-      - ghcr.io/netbirdio/netbird-server:{{ .Version }}-arm
+      - rydiann/netbird-server:{{ .Version }}-arm
     ids:
       - netbird-server
     goarch: arm
@@ -631,8 +607,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/reverse-proxy:{{ .Version }}-amd64
-      - ghcr.io/netbirdio/reverse-proxy:{{ .Version }}-amd64
+      - rydiann/reverse-proxy:{{ .Version }}-amd64
     ids:
       - netbird-proxy
     goarch: amd64
@@ -647,8 +622,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/reverse-proxy:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/reverse-proxy:{{ .Version }}-arm64v8
+      - rydiann/reverse-proxy:{{ .Version }}-arm64v8
     ids:
       - netbird-proxy
     goarch: arm64
@@ -663,8 +637,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
   - image_templates:
-      - netbirdio/reverse-proxy:{{ .Version }}-arm
-      - ghcr.io/netbirdio/reverse-proxy:{{ .Version }}-arm
+      - rydiann/reverse-proxy:{{ .Version }}-arm
     ids:
       - netbird-proxy
     goarch: arm
@@ -680,208 +653,123 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/netbirdio/{{.ProjectName}}"
       - "--label=maintainer=dev@netbird.io"
 docker_manifests:
-  - name_template: netbirdio/netbird:{{ .Version }}
+  - name_template: rydiann/netbird:{{ .Version }}
     image_templates:
-      - netbirdio/netbird:{{ .Version }}-arm64v8
-      - netbirdio/netbird:{{ .Version }}-arm
-      - netbirdio/netbird:{{ .Version }}-amd64
+      - rydiann/netbird:{{ .Version }}-arm64v8
+      - rydiann/netbird:{{ .Version }}-arm
+      - rydiann/netbird:{{ .Version }}-amd64
 
-  - name_template: netbirdio/netbird:latest
+  - name_template: rydiann/netbird:latest
     image_templates:
-      - netbirdio/netbird:{{ .Version }}-arm64v8
-      - netbirdio/netbird:{{ .Version }}-arm
-      - netbirdio/netbird:{{ .Version }}-amd64
+      - rydiann/netbird:{{ .Version }}-arm64v8
+      - rydiann/netbird:{{ .Version }}-arm
+      - rydiann/netbird:{{ .Version }}-amd64
 
-  - name_template: netbirdio/netbird:{{ .Version }}-rootless
+  - name_template: rydiann/netbird:{{ .Version }}-rootless
     image_templates:
-      - netbirdio/netbird:{{ .Version }}-rootless-arm64v8
-      - netbirdio/netbird:{{ .Version }}-rootless-arm
-      - netbirdio/netbird:{{ .Version }}-rootless-amd64
+      - rydiann/netbird:{{ .Version }}-rootless-arm64v8
+      - rydiann/netbird:{{ .Version }}-rootless-arm
+      - rydiann/netbird:{{ .Version }}-rootless-amd64
 
-  - name_template: netbirdio/netbird:rootless-latest
+  - name_template: rydiann/netbird:rootless-latest
     image_templates:
-      - netbirdio/netbird:{{ .Version }}-rootless-arm64v8
-      - netbirdio/netbird:{{ .Version }}-rootless-arm
-      - netbirdio/netbird:{{ .Version }}-rootless-amd64
+      - rydiann/netbird:{{ .Version }}-rootless-arm64v8
+      - rydiann/netbird:{{ .Version }}-rootless-arm
+      - rydiann/netbird:{{ .Version }}-rootless-amd64
 
-  - name_template: netbirdio/relay:{{ .Version }}
+  - name_template: rydiann/relay:{{ .Version }}
     image_templates:
-      - netbirdio/relay:{{ .Version }}-arm64v8
-      - netbirdio/relay:{{ .Version }}-arm
-      - netbirdio/relay:{{ .Version }}-amd64
+      - rydiann/relay:{{ .Version }}-arm64v8
+      - rydiann/relay:{{ .Version }}-arm
+      - rydiann/relay:{{ .Version }}-amd64
 
-  - name_template: netbirdio/relay:latest
+  - name_template: rydiann/relay:latest
     image_templates:
-      - netbirdio/relay:{{ .Version }}-arm64v8
-      - netbirdio/relay:{{ .Version }}-arm
-      - netbirdio/relay:{{ .Version }}-amd64
+      - rydiann/relay:{{ .Version }}-arm64v8
+      - rydiann/relay:{{ .Version }}-arm
+      - rydiann/relay:{{ .Version }}-amd64
 
-  - name_template: netbirdio/signal:{{ .Version }}
+  - name_template: rydiann/signal:{{ .Version }}
     image_templates:
-      - netbirdio/signal:{{ .Version }}-arm64v8
-      - netbirdio/signal:{{ .Version }}-arm
-      - netbirdio/signal:{{ .Version }}-amd64
+      - rydiann/signal:{{ .Version }}-arm64v8
+      - rydiann/signal:{{ .Version }}-arm
+      - rydiann/signal:{{ .Version }}-amd64
 
-  - name_template: netbirdio/signal:latest
+  - name_template: rydiann/signal:latest
     image_templates:
-      - netbirdio/signal:{{ .Version }}-arm64v8
-      - netbirdio/signal:{{ .Version }}-arm
-      - netbirdio/signal:{{ .Version }}-amd64
+      - rydiann/signal:{{ .Version }}-arm64v8
+      - rydiann/signal:{{ .Version }}-arm
+      - rydiann/signal:{{ .Version }}-amd64
 
-  - name_template: netbirdio/management:{{ .Version }}
+  - name_template: rydiann/management:{{ .Version }}
     image_templates:
-      - netbirdio/management:{{ .Version }}-arm64v8
-      - netbirdio/management:{{ .Version }}-arm
-      - netbirdio/management:{{ .Version }}-amd64
+      - rydiann/management:{{ .Version }}-arm64v8
+      - rydiann/management:{{ .Version }}-arm
+      - rydiann/management:{{ .Version }}-amd64
 
-  - name_template: netbirdio/management:latest
+  - name_template: rydiann/management:latest
     image_templates:
-      - netbirdio/management:{{ .Version }}-arm64v8
-      - netbirdio/management:{{ .Version }}-arm
-      - netbirdio/management:{{ .Version }}-amd64
+      - rydiann/management:{{ .Version }}-arm64v8
+      - rydiann/management:{{ .Version }}-arm
+      - rydiann/management:{{ .Version }}-amd64
 
-  - name_template: netbirdio/management:debug-latest
+  - name_template: rydiann/management:debug-latest
     image_templates:
-      - netbirdio/management:{{ .Version }}-debug-arm64v8
-      - netbirdio/management:{{ .Version }}-debug-arm
-      - netbirdio/management:{{ .Version }}-debug-amd64
-  - name_template: netbirdio/upload:{{ .Version }}
+      - rydiann/management:{{ .Version }}-debug-arm64v8
+      - rydiann/management:{{ .Version }}-debug-arm
+      - rydiann/management:{{ .Version }}-debug-amd64
+  - name_template: rydiann/upload:{{ .Version }}
     image_templates:
-      - netbirdio/upload:{{ .Version }}-arm64v8
-      - netbirdio/upload:{{ .Version }}-arm
-      - netbirdio/upload:{{ .Version }}-amd64
+      - rydiann/upload:{{ .Version }}-arm64v8
+      - rydiann/upload:{{ .Version }}-arm
+      - rydiann/upload:{{ .Version }}-amd64
 
-  - name_template: netbirdio/upload:latest
+  - name_template: rydiann/upload:latest
     image_templates:
-      - netbirdio/upload:{{ .Version }}-arm64v8
-      - netbirdio/upload:{{ .Version }}-arm
-      - netbirdio/upload:{{ .Version }}-amd64
+      - rydiann/upload:{{ .Version }}-arm64v8
+      - rydiann/upload:{{ .Version }}-arm
+      - rydiann/upload:{{ .Version }}-amd64
 
-  - name_template: netbirdio/netbird-server:{{ .Version }}
+  - name_template: rydiann/netbird-server:{{ .Version }}
     image_templates:
-      - netbirdio/netbird-server:{{ .Version }}-arm64v8
-      - netbirdio/netbird-server:{{ .Version }}-arm
-      - netbirdio/netbird-server:{{ .Version }}-amd64
+      - rydiann/netbird-server:{{ .Version }}-arm64v8
+      - rydiann/netbird-server:{{ .Version }}-arm
+      - rydiann/netbird-server:{{ .Version }}-amd64
 
-  - name_template: netbirdio/netbird-server:latest
+  - name_template: rydiann/netbird-server:latest
     image_templates:
-      - netbirdio/netbird-server:{{ .Version }}-arm64v8
-      - netbirdio/netbird-server:{{ .Version }}-arm
-      - netbirdio/netbird-server:{{ .Version }}-amd64
+      - rydiann/netbird-server:{{ .Version }}-arm64v8
+      - rydiann/netbird-server:{{ .Version }}-arm
+      - rydiann/netbird-server:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/netbird:{{ .Version }}
-    image_templates:
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-arm
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/netbird:latest
-    image_templates:
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-arm
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/netbird:{{ .Version }}-rootless
-    image_templates:
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-rootless-arm64v8
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-rootless-arm
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-rootless-amd64
 
-  - name_template: ghcr.io/netbirdio/netbird:rootless-latest
-    image_templates:
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-rootless-arm64v8
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-rootless-arm
-      - ghcr.io/netbirdio/netbird:{{ .Version }}-rootless-amd64
 
-  - name_template: ghcr.io/netbirdio/relay:{{ .Version }}
-    image_templates:
-      - ghcr.io/netbirdio/relay:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/relay:{{ .Version }}-arm
-      - ghcr.io/netbirdio/relay:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/relay:latest
-    image_templates:
-      - ghcr.io/netbirdio/relay:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/relay:{{ .Version }}-arm
-      - ghcr.io/netbirdio/relay:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/signal:{{ .Version }}
-    image_templates:
-      - ghcr.io/netbirdio/signal:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/signal:{{ .Version }}-arm
-      - ghcr.io/netbirdio/signal:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/signal:latest
-    image_templates:
-      - ghcr.io/netbirdio/signal:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/signal:{{ .Version }}-arm
-      - ghcr.io/netbirdio/signal:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/management:{{ .Version }}
-    image_templates:
-      - ghcr.io/netbirdio/management:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/management:{{ .Version }}-arm
-      - ghcr.io/netbirdio/management:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/management:latest
-    image_templates:
-      - ghcr.io/netbirdio/management:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/management:{{ .Version }}-arm
-      - ghcr.io/netbirdio/management:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/management:debug-latest
-    image_templates:
-      - ghcr.io/netbirdio/management:{{ .Version }}-debug-arm64v8
-      - ghcr.io/netbirdio/management:{{ .Version }}-debug-arm
-      - ghcr.io/netbirdio/management:{{ .Version }}-debug-amd64
 
-  - name_template: ghcr.io/netbirdio/upload:{{ .Version }}
-    image_templates:
-      - ghcr.io/netbirdio/upload:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/upload:{{ .Version }}-arm
-      - ghcr.io/netbirdio/upload:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/upload:latest
-    image_templates:
-      - ghcr.io/netbirdio/upload:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/upload:{{ .Version }}-arm
-      - ghcr.io/netbirdio/upload:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/netbird-server:{{ .Version }}
-    image_templates:
-      - ghcr.io/netbirdio/netbird-server:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/netbird-server:{{ .Version }}-arm
-      - ghcr.io/netbirdio/netbird-server:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/netbird-server:latest
-    image_templates:
-      - ghcr.io/netbirdio/netbird-server:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/netbird-server:{{ .Version }}-arm
-      - ghcr.io/netbirdio/netbird-server:{{ .Version }}-amd64
 
-  - name_template: netbirdio/reverse-proxy:{{ .Version }}
+  - name_template: rydiann/reverse-proxy:{{ .Version }}
     image_templates:
-      - netbirdio/reverse-proxy:{{ .Version }}-arm64v8
-      - netbirdio/reverse-proxy:{{ .Version }}-arm
-      - netbirdio/reverse-proxy:{{ .Version }}-amd64
+      - rydiann/reverse-proxy:{{ .Version }}-arm64v8
+      - rydiann/reverse-proxy:{{ .Version }}-arm
+      - rydiann/reverse-proxy:{{ .Version }}-amd64
 
-  - name_template: netbirdio/reverse-proxy:latest
+  - name_template: rydiann/reverse-proxy:latest
     image_templates:
-      - netbirdio/reverse-proxy:{{ .Version }}-arm64v8
-      - netbirdio/reverse-proxy:{{ .Version }}-arm
-      - netbirdio/reverse-proxy:{{ .Version }}-amd64
+      - rydiann/reverse-proxy:{{ .Version }}-arm64v8
+      - rydiann/reverse-proxy:{{ .Version }}-arm
+      - rydiann/reverse-proxy:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/reverse-proxy:{{ .Version }}
-    image_templates:
-      - ghcr.io/netbirdio/reverse-proxy:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/reverse-proxy:{{ .Version }}-arm
-      - ghcr.io/netbirdio/reverse-proxy:{{ .Version }}-amd64
 
-  - name_template: ghcr.io/netbirdio/reverse-proxy:latest
-    image_templates:
-      - ghcr.io/netbirdio/reverse-proxy:{{ .Version }}-arm64v8
-      - ghcr.io/netbirdio/reverse-proxy:{{ .Version }}-arm
-      - ghcr.io/netbirdio/reverse-proxy:{{ .Version }}-amd64
 
 brews:
   - ids:
