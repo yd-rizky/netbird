@@ -120,7 +120,7 @@ jobs:
       linux_packages_artifact_url: ${{ steps.upload_linux_packages.outputs.artifact-url }}
       windows_packages_artifact_url: ${{ steps.upload_windows_packages.outputs.artifact-url }}
       macos_packages_artifact_url: ${{ steps.upload_macos_packages.outputs.artifact-url }}
-      ghcr_images: ${{ steps.tag_and_push_images.outputs.images_markdown }}
+      dockerhub_images: ${{ steps.tag_and_push_images.outputs.images_markdown }}
     env:
       flags: ""
     steps:
@@ -160,18 +160,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Login to Docker hub
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      - name: Log in to the GitHub container registry
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.CI_DOCKER_PUSH_GITHUB_TOKEN }}
       - name: Install OS build dependencies
         run: sudo apt update && sudo apt install -y -q gcc-arm-linux-gnueabihf gcc-aarch64-linux-gnu
 
@@ -234,13 +227,10 @@ jobs:
             fi
           }
 
-          ghcr_package_url() {
-            local image="$1" package encoded_package
-            package="${image#ghcr.io/}"
-            package="${package#*/}"
-            package="${package%%:*}"
-            encoded_package="${package//\//%2F}"
-            echo "https://github.com/orgs/netbirdio/packages/container/package/${encoded_package}"
+          dockerhub_url() {
+            local image="$1" repo
+            repo="${image%%:*}"
+            echo "https://hub.docker.com/r/${repo}"
           }
 
           image_refs=()
@@ -262,7 +252,7 @@ jobs:
           JSON
 
           mapfile -t src_images < <(
-            jq -r '.[] | select(.type == "Docker Image") | select(.goarch == "amd64") | .name | select(startswith("ghcr.io/"))' /tmp/goreleaser-artifacts.json
+            jq -r '.[] | select(.type == "Docker Image") | select(.goarch == "amd64") | .name | select(startswith("rydiann/"))' /tmp/goreleaser-artifacts.json
           )
 
           for src in "${src_images[@]}"; do
@@ -272,10 +262,10 @@ jobs:
           {
             echo "images_markdown<<EOF"
             if [[ ${#image_refs[@]} -eq 0 ]]; then
-              echo "_No GHCR images were pushed._"
+              echo "_No Docker Hub images were pushed._"
             else
               printf '%s\n' "${image_refs[@]}" | sort -u | while read -r image; do
-                printf -- '- [`%s`](%s)\n' "$image" "$(ghcr_package_url "$image")"
+                printf -- '- [`%s`](%s)\n' "$image" "$(dockerhub_url "$image")"
               done
             fi
             echo "EOF"
@@ -622,7 +612,7 @@ jobs:
           MACOS_PACKAGES_ARTIFACT_URL: ${{ needs.release.outputs.macos_packages_artifact_url }}
           RELEASE_UI_ARTIFACT_URL: ${{ needs.release_ui.outputs.release_ui_artifact_url }}
           RELEASE_UI_DARWIN_ARTIFACT_URL: ${{ needs.release_ui_darwin.outputs.release_ui_darwin_artifact_url }}
-          GHCR_IMAGES_MARKDOWN: ${{ needs.release.outputs.ghcr_images }}
+          DOCKERHUB_IMAGES_MARKDOWN: ${{ needs.release.outputs.dockerhub_images }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -650,7 +640,7 @@ jobs:
               .map(([name, url, result]) => `| ${name} | ${artifactCell(url, result)} |`)
               .join('\n');
 
-            const ghcrImages = (process.env.GHCR_IMAGES_MARKDOWN || '').trim() || '_No GHCR images were pushed._';
+            const dockerhubImages = (process.env.DOCKERHUB_IMAGES_MARKDOWN || '').trim() || '_No Docker Hub images were pushed._';
 
             const body = [
               marker,
@@ -662,8 +652,8 @@ jobs:
               '| --- | --- |',
               artifactRows,
               '',
-              '### GHCR images (amd64)',
-              ghcrImages,
+              '### Docker Hub images (amd64)',
+              dockerhubImages,
               '',
               '_This comment is updated by the Release workflow. Artifact links expire according to the workflow retention policy._',
             ].join('\n');
