@@ -9,112 +9,22 @@ on:
   pull_request:
 
 env:
-  SIGN_PIPE_VER: "v0.1.4"
   GORELEASER_VER: "v2.14.3"
   PRODUCT_NAME: "NetBird"
   COPYRIGHT: "NetBird GmbH"
+
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.head_ref || github.actor_id }}
   cancel-in-progress: true
 
 jobs:
-  release_freebsd_port:
-    name: "FreeBSD Port / Build & Test"
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Generate FreeBSD port diff
-        run: bash release_files/freebsd-port-diff.sh
-
-      - name: Generate FreeBSD port issue body
-        run: bash release_files/freebsd-port-issue-body.sh
-
-      - name: Check if diff was generated
-        id: check_diff
-        run: |
-          if ls netbird-*.diff 1> /dev/null 2>&1; then
-            echo "diff_exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "diff_exists=false" >> $GITHUB_OUTPUT
-            echo "No diff file generated (port may already be up to date)"
-          fi
-
-      - name: Extract version
-        if: steps.check_diff.outputs.diff_exists == 'true'
-        id: version
-        run: |
-          VERSION=$(ls netbird-*.diff | sed 's/netbird-\(.*\)\.diff/\1/')
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Generated files for version: $VERSION"
-          cat netbird-*.diff
-
-      - name: Test FreeBSD port
-        if: steps.check_diff.outputs.diff_exists == 'true'
-        uses: vmactions/freebsd-vm@v1
-        with:
-          usesh: true
-          copyback: false
-          release: "15.0"
-          prepare: |
-            # Install required packages
-            pkg install -y git curl portlint go
-
-            # Install Go for building
-            GO_TARBALL="go1.25.5.freebsd-amd64.tar.gz"
-            GO_URL="https://go.dev/dl/$GO_TARBALL"
-            curl -LO "$GO_URL"
-            tar -C /usr/local -xzf "$GO_TARBALL"
-
-            # Clone ports tree (shallow, only what we need)
-            git clone --depth 1 --filter=blob:none https://git.FreeBSD.org/ports.git /usr/ports
-            cd /usr/ports
-
-          run: |
-            set -e -x
-            export PATH=$PATH:/usr/local/go/bin
-
-            # Find the diff file
-            echo "Finding diff file..."
-            DIFF_FILE=$(find $PWD -name "netbird-*.diff" -type f 2>/dev/null | head -1)
-            echo "Found: $DIFF_FILE"
-
-            if [[ -z "$DIFF_FILE" ]]; then
-              echo "ERROR: Could not find diff file"
-              find ~ -name "*.diff" -type f 2>/dev/null || true
-              exit 1
-            fi
-
-            # Apply the generated diff from /usr/ports (diff has a/security/netbird/... paths)
-            cd /usr/ports
-            patch -p1 -V none < "$DIFF_FILE"
-
-            # Show patched Makefile
-            version=$(cat security/netbird/Makefile | grep -E '^DISTVERSION=' | awk '{print $NF}')
-            
-            cd /usr/ports/security/netbird
-            export BATCH=yes
-            make package
-            pkg add ./work/pkg/netbird-*.pkg
-            
-            netbird version | grep "$version"
-
-            echo "FreeBSD port test completed successfully!"
-
-      - name: Upload FreeBSD port files
-        if: steps.check_diff.outputs.diff_exists == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: freebsd-port-files
-          path: |
-            ./netbird-*-issue.txt
-            ./netbird-*.diff
-          retention-days: 30
-
   release:
-    runs-on: ubuntu-24.04-8-core
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write # required for GoReleaser to publish the GitHub Release on tag push
     outputs:
       release_artifact_url: ${{ steps.upload_release.outputs.artifact-url }}
       linux_packages_artifact_url: ${{ steps.upload_linux_packages.outputs.artifact-url }}
@@ -168,14 +78,6 @@ jobs:
       - name: Install OS build dependencies
         run: sudo apt update && sudo apt install -y -q gcc-arm-linux-gnueabihf gcc-aarch64-linux-gnu
 
-      - name: Decode GPG signing key
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-        env:
-          GPG_RPM_PRIVATE_KEY: ${{ secrets.GPG_RPM_PRIVATE_KEY }}
-        run: |
-          echo "$GPG_RPM_PRIVATE_KEY" | base64 -d > /tmp/gpg-rpm-signing-key.asc
-          echo "GPG_RPM_KEY_FILE=/tmp/gpg-rpm-signing-key.asc" >> $GITHUB_ENV
-
       - name: Install goversioninfo
         run: go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@233067e
       - name: Generate windows syso amd64
@@ -190,27 +92,6 @@ jobs:
           args: release --clean ${{ env.flags }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
-          UPLOAD_DEBIAN_SECRET: ${{ secrets.PKG_UPLOAD_SECRET }}
-          UPLOAD_YUM_SECRET: ${{ secrets.PKG_UPLOAD_SECRET }}
-          GPG_RPM_KEY_FILE: ${{ env.GPG_RPM_KEY_FILE }}
-          NFPM_NETBIRD_RPM_PASSPHRASE: ${{ secrets.GPG_RPM_PASSPHRASE }}
-      - name: Verify RPM signatures
-        run: |
-          docker run --rm -v $(pwd)/dist:/dist fedora:41 bash -c '
-            dnf install -y -q rpm-sign curl >/dev/null 2>&1
-            curl -sSL https://pkgs.netbird.io/yum/repodata/repomd.xml.key -o /tmp/rpm-pub.key
-            rpm --import /tmp/rpm-pub.key
-            echo "=== Verifying RPM signatures ==="
-            for rpm_file in /dist/*amd64*.rpm; do
-              [ -f "$rpm_file" ] || continue
-              echo "--- $(basename $rpm_file) ---"
-              rpm -K "$rpm_file"
-            done
-          '
-      - name: Clean up GPG key
-        if: always()
-        run: rm -f /tmp/gpg-rpm-signing-key.asc
       - name: Tag and push images (amd64 only)
         id: tag_and_push_images
         if: |
@@ -301,6 +182,8 @@ jobs:
 
   release_ui:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # required for GoReleaser to publish the GitHub Release on tag push
     outputs:
       release_ui_artifact_url: ${{ steps.upload_release_ui.outputs.artifact-url }}
     steps:
@@ -342,14 +225,6 @@ jobs:
       - name: Install dependencies
         run: sudo apt update && sudo apt install -y -q libappindicator3-dev gir1.2-appindicator3-0.1 libxxf86vm-dev gcc-mingw-w64-x86-64
 
-      - name: Decode GPG signing key
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-        env:
-          GPG_RPM_PRIVATE_KEY: ${{ secrets.GPG_RPM_PRIVATE_KEY }}
-        run: |
-          echo "$GPG_RPM_PRIVATE_KEY" | base64 -d > /tmp/gpg-rpm-signing-key.asc
-          echo "GPG_RPM_KEY_FILE=/tmp/gpg-rpm-signing-key.asc" >> $GITHUB_ENV
-
       - name: Install LLVM-MinGW for ARM64 cross-compilation
         run: |
           cd /tmp
@@ -371,27 +246,6 @@ jobs:
           args: release --config .goreleaser_ui.yaml --clean ${{ env.flags }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
-          UPLOAD_DEBIAN_SECRET: ${{ secrets.PKG_UPLOAD_SECRET }}
-          UPLOAD_YUM_SECRET: ${{ secrets.PKG_UPLOAD_SECRET }}
-          GPG_RPM_KEY_FILE: ${{ env.GPG_RPM_KEY_FILE }}
-          NFPM_NETBIRD_UI_RPM_PASSPHRASE: ${{ secrets.GPG_RPM_PASSPHRASE }}
-      - name: Verify RPM signatures
-        run: |
-          docker run --rm -v $(pwd)/dist:/dist fedora:41 bash -c '
-            dnf install -y -q rpm-sign curl >/dev/null 2>&1
-            curl -sSL https://pkgs.netbird.io/yum/repodata/repomd.xml.key -o /tmp/rpm-pub.key
-            rpm --import /tmp/rpm-pub.key
-            echo "=== Verifying RPM signatures ==="
-            for rpm_file in /dist/*.rpm; do
-              [ -f "$rpm_file" ] || continue
-              echo "--- $(basename $rpm_file) ---"
-              rpm -K "$rpm_file"
-            done
-          '
-      - name: Clean up GPG key
-        if: always()
-        run: rm -f /tmp/gpg-rpm-signing-key.asc
       - name: upload non tags for debug purposes
         id: upload_release_ui
         uses: actions/upload-artifact@v4
@@ -402,6 +256,8 @@ jobs:
 
   release_ui_darwin:
     runs-on: macos-latest
+    permissions:
+      contents: write # required for GoReleaser to publish the GitHub Release on tag push
     outputs:
       release_ui_darwin_artifact_url: ${{ steps.upload_release_ui_darwin.outputs.artifact-url }}
     steps:
@@ -686,17 +542,3 @@ jobs:
               });
               core.info(`Created release artifacts comment ${data.id}`);
             }
-
-  trigger_signer:
-    runs-on: ubuntu-latest
-    needs: [release, release_ui, release_ui_darwin, test_windows_installer]
-    if: startsWith(github.ref, 'refs/tags/')
-    steps:
-      - name: Trigger binaries sign pipelines
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: Sign bin and installer
-          repo: netbirdio/sign-pipelines
-          ref: ${{ env.SIGN_PIPE_VER }}
-          token: ${{ secrets.SIGN_GITHUB_TOKEN }}
-          inputs: '{ "tag": "${{ github.ref }}", "skipRelease": false }'
